@@ -1,0 +1,13 @@
+{% extends "common.html" %}
+{% block content %}
+<p>
+<form action="/download" method="post">
+    <label>
+        ID:
+        <input type="text" name="proc_id" size="40">
+    </label>
+    <input type="submit" value="送信">
+    <input type="reset" value="リセット">
+</form>
+</p>
+{% endblock %}

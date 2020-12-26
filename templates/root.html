@@ -1,0 +1,16 @@
+{% extends "common.html" %}
+{% block content %}
+<p>
+    <a href="/download">Download form</a>
+</p>
+<p>
+<form action="/start" method="post">
+    <label>
+        param:
+        <input type="text" name="param" size="40">
+    </label>
+    <input type="submit" value="送信">
+    <input type="reset" value="リセット">
+</form>
+</p>
+{% endblock %}
