@@ -62,6 +62,7 @@ def start_command():
     proc_id = request.form['param']
     # TODO
 
+    # ファイルアップロード用
     if 'datafile' in request.files:
         file = request.files['datafile']
         if '' != file.filename:
@@ -69,6 +70,7 @@ def start_command():
                 os.path.splitext(
                     werkzeug.utils.secure_filename(file.filename))[1]
             file.save(os.path.join(DOWNLOAD_DIR_PATH, saveFileName))
+    #
 
     return render_template('start.html', proc_id=proc_id)
 
@@ -105,6 +107,7 @@ def download_file():
 # 例外処理
 
 
+# ファイルアップロード用
 @app.errorhandler(werkzeug.exceptions.RequestEntityTooLarge)
 def handle_over_max_file_size(error):
     return 'The file is too large.'
