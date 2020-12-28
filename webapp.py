@@ -1,11 +1,22 @@
+from datetime import datetime
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, jsonify, make_response, redirect, render_template, request, send_from_directory, url_for
 import os
+import werkzeug
 
 
 # 設定ファイルの値を取得する
 load_dotenv()
-DOWNLOAD_DIR_PATH = os.getenv('DATA_DIR_PATH')
+
+try:
+    DOWNLOAD_DIR_PATH = os.getenv('DATA_DIR_PATH')
+except:
+    DOWNLOAD_DIR_PATH = 'data'
+
+try:
+    MAX_FILE_SIZE = int(os.getenv('MAX_FILE_SIZE'))
+except:
+    MAX_FILE_SIZE = 1024 * 1024
 
 
 app = Flask(__name__, static_folder=None)
@@ -50,6 +61,15 @@ def start_command():
 
     proc_id = request.form['param']
     # TODO
+
+    if 'datafile' in request.files:
+        file = request.files['datafile']
+        if '' != file.filename:
+            saveFileName = datetime.now().strftime("%Y%m%d%H%M%S%f") + \
+                os.path.splitext(
+                    werkzeug.utils.secure_filename(file.filename))[1]
+            file.save(os.path.join(DOWNLOAD_DIR_PATH, saveFileName))
+
     return render_template('start.html', proc_id=proc_id)
 
 
@@ -80,9 +100,20 @@ def download_file():
     #     # attachment_filename=renamed_filename,
     #     mimetype=get_mimetype(os.path.splitext(downloadFile)[1])
     # )
-    return downloadFile
+    return make_response(jsonify({'result': downloadFile}))
+
+# 例外処理
 
 
+@app.errorhandler(werkzeug.exceptions.RequestEntityTooLarge)
+def handle_over_max_file_size(error):
+    return 'The file is too large.'
+
+
+# TODO 404
+
+
+# main
 if __name__ == '__main__':
     print(app.url_map)
     app.run(debug=True, host='localhost', port=3000)

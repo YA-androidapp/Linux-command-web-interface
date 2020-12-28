@@ -4,11 +4,18 @@
     <a href="/download">Download form</a>
 </p>
 <p>
-<form action="/start" method="post">
+<form action="/start" method="post" enctype="multipart/form-data">
+    <!-- <form action="/start" method="post"> -->
     <label>
         param:
         <input type="text" name="param" size="40">
     </label>
+    <br>
+    <label>
+        file:
+        <input type="file" name="datafile" />
+    </label>
+    <br>
     <input type="submit" value="送信">
     <input type="reset" value="リセット">
 </form>
